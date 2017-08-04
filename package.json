@@ -1,0 +1,23 @@
+{
+  "name": "delphy",
+  "version": "1.0.0",
+  "description": "delphy token contracts",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.25.0",
+    "bignumber.js": "^4.0.2",
+    "ethereumjs-util": "^5.1.2"
+  },
+  "devDependencies": {
+    "minimatch": "^3.0.4"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "author": "jsw",
+  "license": "ISC"
+}
