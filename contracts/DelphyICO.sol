@@ -193,7 +193,7 @@ contract DelphyICO is Owned {
 
         orgs[5] = FOUNDATION_HOLDER;
         nums[5] = FOUNDATION_Tokens;
-        delphyToken = new DelphyToken(orgs, nums);
+        delphyToken = new DelphyToken(this, orgs, nums);
     }
 
     /**
@@ -245,7 +245,7 @@ contract DelphyICO is Owned {
         require(tokenCount != 0x0);
 
         lockedBalances[receipent] = 0;
-        delphyToken.transfer(receipent, tokenCount);
+        require(delphyToken.claimToken(PUBLIC_SECONDE_HOLDER, receipent, tokenCount));
      }
 
     /// @dev Emergency situation that requires contribution period to stop.

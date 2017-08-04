@@ -39,6 +39,11 @@ import "./StandardToken.sol";
 contract DelphyToken is StandardToken {
 
     /*
+     * EVENTS
+     */
+    event ClaimTokens(address indexed sourceAddress, address indexed destAddress, uint gotTokens);
+
+    /*
      *  Constants
      */
     string constant public name = "Delphy Token";
@@ -47,11 +52,42 @@ contract DelphyToken is StandardToken {
     uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
 
     /*
+     * MODIFIERS
+     */
+
+    modifier onlyMinter {
+    	  assert(msg.sender == minter);
+    	  _;
+    }
+
+    /**
+     * EXTERNAL FUNCTION
+     *
+     * @dev ico contract instance sell token
+     * @param from The source account owned tokens
+     * @param to The destination account owned mint tokens
+     * @param amount The amount of mint token
+     * be sent to this address.
+     */
+    function claimToken(address from, address to, uint amount)
+        external
+        onlyMinter
+        returns (bool)
+     {
+        balances[from] -= amount;
+        balances[to] += amount;
+        ClaimTokens(from, to, amount);
+        return true;
+     }
+
+    address public minter;
+    /*
      *  Public functions
      */
-    function DelphyToken(address[] owners, uint[] tokens)
+    function DelphyToken(address _minter, address[] owners, uint[] tokens)
         public
     {
+        minter = _minter;
         totalSupply = 0;
 
         for (uint i=0; i<owners.length; i++) {
