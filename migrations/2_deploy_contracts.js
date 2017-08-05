@@ -5,7 +5,7 @@ var DelphyICO = artifacts.require("./DelphyICO.sol");
 module.exports = function(deployer,network, accounts) {
   var timenow = new Date().getTime();
   var left = timenow % 1000;
-  var timeseconds = (timenow - left) / 1000
+  var timeseconds = (timenow - left) / 1000;
   deployer.deploy(ConvertLib);
   // deployer.link(ConvertLib, [DelphyToken, DelphyICO]);
   deployer.link(ConvertLib, [DelphyICO]);

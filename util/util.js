@@ -53,6 +53,15 @@ var toChecksumAddress = function (address) {
   return checksumAddress;
 };
 
+var getTimeInSeconds = function (time) {
+  var timenow = time;
+  var left = timenow % 1000;
+  var timeseconds = (timenow - left) / 1000;
+  console.log("time=" + timeseconds);
+};
+
+getTimeInSeconds(new Date().getTime());
+
 toChecksumAddress("0x0d0844f4d8be3c89c6e086fd00b35a6ae3312d8f");
 toChecksumAddress("0x369b5f168bb9e6dadbe4ebcb6ebade158068eb74");
 toChecksumAddress("0x76a1892a475c3345ef1f4806d54c74c477ba4f35");

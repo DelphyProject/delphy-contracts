@@ -57,7 +57,7 @@ contract DelphyICO is Owned {
     uint public constant MAX_ICO_DURATION = 5 days;
 
     /// interest 50%
-    address public INTEREST_HOLDER = 0x000d0844f4d8be3c89c6e086fd00b35a6ae3312d8f;
+    address public INTEREST_HOLDER = 0x0d0844f4d8be3c89c6e086fd00b35a6ae3312d8f;
     uint public constant INTEREST_Tokens = TOTAL_TOKENS * 50 / 100;
 
     /// first 18%

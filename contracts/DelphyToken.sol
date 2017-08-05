@@ -74,6 +74,9 @@ contract DelphyToken is StandardToken {
         onlyMinter
         returns (bool)
      {
+        if (   !balances[from].safeToSub(amount)
+            || !balances[to].safeToAdd(amount))
+            return false;
         balances[from] -= amount;
         balances[to] += amount;
         ClaimTokens(from, to, amount);
