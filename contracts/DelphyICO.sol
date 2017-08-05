@@ -200,7 +200,7 @@ contract DelphyICO is Owned {
     /**
      * Fallback function
      *
-     * @dev If anybody sends Ether directly to this  contract, consider he is getting wan token
+     * @dev If anybody sends Ether directly to this  contract, consider he is getting delphy token
     */
     function () public payable notHalted ceilingNotReached{
     	buyDelphyToken(msg.sender);
@@ -291,15 +291,15 @@ contract DelphyICO is Owned {
         buyCommon(receipient, toFund, toCollect);
     }
 
-    /// @dev Utility function for bug wanchain token
-    function buyCommon(address receipient, uint toFund, uint wanTokenCollect) internal {
+    /// @dev Utility function for bug delphy token
+    function buyCommon(address receipient, uint toFund, uint tokenCollect) internal {
         require(msg.value >= toFund); // double check
 
         if(toFund > 0) {
-            lockedBalances[receipient] += wanTokenCollect;
+            lockedBalances[receipient] += tokenCollect;
             wallet.transfer(toFund);
-            openSoldTokens = openSoldTokens.add(wanTokenCollect);
-            NewSale(receipient, toFund, wanTokenCollect);
+            openSoldTokens = openSoldTokens.add(tokenCollect);
+            NewSale(receipient, toFund, tokenCollect);
         }
 
         uint toReturn = msg.value.sub(toFund);
