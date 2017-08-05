@@ -54,31 +54,32 @@ contract DelphyICO is Owned {
 
     uint8 public constant decimals = 18;
     uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
+    uint public constant TOTAL_TOKENS_PERCENT = 1000000 * 10**18; // 1e / 100
     uint public constant MAX_ICO_DURATION = 5 days;
 
     /// interest 50%
-    address public INTEREST_HOLDER = 0x0d0844f4d8be3c89c6e086fd00b35a6ae3312d8f;
-    uint public constant INTEREST_Tokens = TOTAL_TOKENS * 50 / 100;
+    address public INTEREST_HOLDER = 0x000d0844f4d8be3c89c6e086fd00b35a6ae3312d8f;
+    uint public constant INTEREST_Tokens = TOTAL_TOKENS_PERCENT * 50;
 
     /// first 18%
     address public constant PUBLIC_FIRST_HOLDER = 0xB1EFca62C555b49E67363B48aE5b8Af3C7E3e656;
-    uint public constant PUBLIC_FIRST_Tokens = TOTAL_TOKENS * 18 / 100;
+    uint public constant PUBLIC_FIRST_Tokens = TOTAL_TOKENS_PERCENT * 18;
 
     /// second 8%
     address public constant PUBLIC_SECONDE_HOLDER = 0x00779e0e4c6083cfd26dE77B4dbc107A7EbB99d2;
-    uint public constant PUBLIC_SECONDE_Tokens = TOTAL_TOKENS * 8 / 100;
+    uint public constant PUBLIC_SECONDE_Tokens = TOTAL_TOKENS_PERCENT * 8;
 
     /// pre-ico 5%
     address public constant PRE_ICO_HOLDER = 0xDD91615Ea8De94bC48231c4ae9488891F1648dc5;
-    uint public constant PRE_ICO_Tokens = TOTAL_TOKENS * 5 / 100;
+    uint public constant PRE_ICO_Tokens = TOTAL_TOKENS_PERCENT * 5;
 
     /// dev team 10%
     address public constant DEV_TEAM_HOLDER = 0xDD91615Ea8De94bC48231c4ae9488891F1648dc5;
-    uint public constant DEV_TEAM_Tokens = TOTAL_TOKENS * 10 / 100;
+    uint public constant DEV_TEAM_Tokens = TOTAL_TOKENS_PERCENT * 10;
 
     /// foundation 9%
     address public constant FOUNDATION_HOLDER = 0xDD91615Ea8De94bC48231c4ae9488891F1648dc5;
-    uint public constant FOUNDATION_Tokens = TOTAL_TOKENS * 9 / 100;
+    uint public constant FOUNDATION_Tokens = TOTAL_TOKENS_PERCENT * 9;
 
     /// will sold
     uint public constant MAX_OPEN_SOLD = PUBLIC_SECONDE_Tokens;
@@ -105,7 +106,7 @@ contract DelphyICO is Owned {
     /// Accumulator for partner sold
     mapping (address => uint256) public partnersBought;
     /// Buy
-    mapping (address => uint) lockedBalances;
+    mapping (address => uint256) public lockedBalances;
 
     /*
      * MODIFIERS
