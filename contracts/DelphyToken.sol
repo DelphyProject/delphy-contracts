@@ -38,73 +38,35 @@ import "./StandardToken.sol";
 /// @author jsw
 contract DelphyToken is StandardToken {
 
-    /*
-     * EVENTS
-     */
-    event ClaimTokens(address indexed sourceAddress, address indexed destAddress, uint gotTokens);
+  /*
+   * EVENTS
+   */
+  event ClaimTokens(address indexed sourceAddress, address indexed destAddress, uint gotTokens);
 
-    /*
-     *  Constants
-     */
-    string constant public name = "Delphy Token";
-    string constant public symbol = "DPY";
-    uint8 constant public decimals = 18;
-    uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
+  /*
+   *  Constants
+   */
+  string constant public name = "Delphy Token";
+  string constant public symbol = "DPY";
+  uint8 constant public decimals = 18;
+  uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
 
-    /*
-     * MODIFIERS
-     */
+  /*
+   *  Public functions
+   */
+  function DelphyToken(address[] owners, uint[] tokens)
+    public
+  {
+    totalSupply = 0;
 
-    modifier onlyMinter {
-    	  assert(msg.sender == minter);
-    	  _;
+    for (uint i=0; i<owners.length; i++) {
+      require (owners[i] != 0);
+
+      balances[owners[i]] += tokens[i];
+      Transfer(0, owners[i], tokens[i]);
+      totalSupply += tokens[i];
     }
 
-    /**
-     * EXTERNAL FUNCTION
-     *
-     * @dev ico contract instance sell token
-     * @param from The source account owned tokens
-     * @param to The destination account owned mint tokens
-     * @param amount The amount of mint token
-     * be sent to this address.
-     */
-    function claimToken(address from, address to, uint amount)
-        external
-        onlyMinter
-        returns (bool)
-     {
-        if (   !balances[from].safeToSub(amount)
-            || !balances[to].safeToAdd(amount))
-            return false;
-        balances[from] -= amount;
-        balances[to] += amount;
-        ClaimTokens(from, to, amount);
-        return true;
-     }
-
-    /*
-     *  Storage
-     */
-    /// Fields that are only changed in constructor
-    address public minter;
-    /*
-     *  Public functions
-     */
-    function DelphyToken(address _minter, address[] owners, uint[] tokens)
-        public
-    {
-        minter = _minter;
-        totalSupply = 0;
-
-        for (uint i=0; i<owners.length; i++) {
-            require (owners[i] != 0);
-
-            balances[owners[i]] += tokens[i];
-            Transfer(0, owners[i], tokens[i]);
-            totalSupply += tokens[i];
-        }
-
-        require (totalSupply == TOTAL_TOKENS);
-    }
+    require (totalSupply == TOTAL_TOKENS);
+  }
 }
