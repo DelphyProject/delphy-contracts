@@ -83,6 +83,10 @@ contract DelphyToken is StandardToken {
         return true;
      }
 
+    /*
+     *  Storage
+     */
+    /// Fields that are only changed in constructor
     address public minter;
     /*
      *  Public functions
