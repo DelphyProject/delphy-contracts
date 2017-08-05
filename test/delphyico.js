@@ -1,6 +1,6 @@
-
+const DelphyICOMock = artifacts.require("DelphyICOMock.sol");
 const BigNumber = require('bignumber.js');
-var DelphyICO = artifacts.require("./DelphyICO.sol");
+
 
 contract('DelphyICO', function (accounts) {
   // Solidity constants
@@ -11,7 +11,7 @@ contract('DelphyICO', function (accounts) {
   const years = 52 * weeks;
   const ether = new BigNumber(Math.pow(10, 18));
 
-  // WanchainContribution constant fields
+  // DelphyICO constant fields
   const INTEREST_Tokens = 50;  // 50%
   const PUBLIC_FIRST_Tokens = 18;   // 18%
   const PUBLIC_SECOND_Tokens = 8;   //
@@ -19,13 +19,20 @@ contract('DelphyICO', function (accounts) {
   const DEV_TEAM_Tokens = 10;       //
   const FOUNDATION_Tokens = 9;      //
 
+
+  // Test globals
+  let icoContract;
+  let tokenContract;
+  let testCases;
+
   const wallet = accounts[0];
+
   let initalBlockTime;
   const startDelay = 1 * days;
   const totalDuring = 5 * days;
   let startTime;
   let endTime;
-  const numTestCases = 8;
+  const numTestCases = 3;
   describe('PREPARATIONS', () => {
     before('Check accounts', (done) => {
       assert.equal(accounts.length, 10);
@@ -72,4 +79,11 @@ contract('DelphyICO', function (accounts) {
       done();
     });
   });
+
+  // describe('CONTRACT DEPLOYMENT', () => {
+    it('Deploy DelphyICO contracts', async function() {
+      icoContract = await DelphyICOMock.new(wallet, startTime);
+      tokenContract = DelphyICOMock.delphyToken;
+    });
+  // });
 });
