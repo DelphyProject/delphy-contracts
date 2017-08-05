@@ -66,8 +66,8 @@ contract DelphyICO is Owned {
     uint public constant PUBLIC_FIRST_Tokens = TOTAL_TOKENS_PERCENT * 18;
 
     /// second 8%
-    address public constant PUBLIC_SECONDE_HOLDER = 0x00779e0e4c6083cfd26dE77B4dbc107A7EbB99d2;
-    uint public constant PUBLIC_SECONDE_Tokens = TOTAL_TOKENS_PERCENT * 8;
+    address public constant PUBLIC_SECOND_HOLDER = 0x00779e0e4c6083cfd26dE77B4dbc107A7EbB99d2;
+    uint public constant PUBLIC_SECOND_Tokens = TOTAL_TOKENS_PERCENT * 8;
 
     /// pre-ico 5%
     address public constant PRE_ICO_HOLDER = 0xDD91615Ea8De94bC48231c4ae9488891F1648dc5;
@@ -172,7 +172,7 @@ contract DelphyICO is Owned {
         halted = false;
         wallet = _wallet;
         startTime = _startTime;
-    	endTime = startTime + MAX_ICO_DURATION;
+    	  endTime = startTime + MAX_ICO_DURATION;
         openSoldTokens = 0;
 
         address[] memory orgs = new address[](6);
@@ -183,8 +183,8 @@ contract DelphyICO is Owned {
         orgs[1] = PUBLIC_FIRST_HOLDER;
         nums[1] = PUBLIC_FIRST_Tokens;
 
-        orgs[2] = PUBLIC_SECONDE_HOLDER;
-        nums[2] = PUBLIC_SECONDE_Tokens;
+        orgs[2] = PUBLIC_SECOND_HOLDER;
+        nums[2] = PUBLIC_SECOND_Tokens;
 
         orgs[3] = PRE_ICO_HOLDER;
         nums[3] = PRE_ICO_Tokens;
