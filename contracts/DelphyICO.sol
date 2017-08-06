@@ -288,7 +288,7 @@ contract DelphyICO is Owned {
     (toFund,  toCollect)= costAndBuyTokens(partnerAvailable);
 
     partnersBought[receipient] = partnersBought[receipient].add(toCollect);
-    buyCommon(msg.sender, toFund, toCollect);
+    buyCommon(receipient, toFund, toCollect);
   }
   /// @dev Buy Delphy token normally
   function buyNormal(address receipient) internal {
