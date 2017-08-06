@@ -1,5 +1,6 @@
 const DelphyICOMock = artifacts.require("DelphyICOMock.sol");
 const DelphyTokenContract = artifacts.require("DelphyToken.sol");
+const assertFail = require("./helpers/assertFail");
 const BigNumber = require('bignumber.js');
 
 
@@ -100,34 +101,61 @@ contract('DelphyICO', function (accounts) {
     it('Deploy DelphyICO contracts', async function() {
       icoContract = await DelphyICOMock.new(wallet, startTime);
       tokenContract = DelphyTokenContract.at(await icoContract.delphyToken());
-      // console.log(tokenContract);
     });
 
     it('Checks initial parameters', async function () {
       // check constant
-      assert(TOTAL_TOKENS_AMOUNT.comparedTo(new BigNumber(await icoContract.TOTAL_TOKENS())) === 0);
+      assert(TOTAL_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.totalSupply())) === 0);
 
-      // compare to ico constant and token balance
-      assert(INTEREST_Tokens_AMOUNT.comparedTo(new BigNumber(await icoContract.INTEREST_Tokens())) === 0);
+      // check token balance
       assert(INTEREST_Tokens_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.INTEREST_HOLDER()))) === 0);
-
-      assert(PUBLIC_FIRST_Tokens_AMOUNT.comparedTo(new BigNumber(await icoContract.PUBLIC_FIRST_Tokens())) === 0);
       assert(PUBLIC_FIRST_Tokens_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.PUBLIC_FIRST_HOLDER()))) === 0);
-
-      assert(PUBLIC_SECOND_Tokens_AMOUNT.comparedTo(new BigNumber(await icoContract.PUBLIC_SECOND_Tokens())) === 0);
       assert(PUBLIC_SECOND_Tokens_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.address))) === 0);
-      //
-      assert(PRE_ICO_Tokens_AMOUNT.comparedTo(new BigNumber(await icoContract.PRE_ICO_Tokens())) === 0);
       assert(PRE_ICO_Tokens_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.PRE_ICO_HOLDER()))) === 0);
-
-      assert(DEV_TEAM_Tokens_AMOUNT.comparedTo(new BigNumber(await icoContract.DEV_TEAM_Tokens())) === 0);
       assert(DEV_TEAM_Tokens_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.DEV_TEAM_HOLDER()))) === 0);
-      //
-      assert(FOUNDATION_Tokens_AMOUNT.comparedTo(new BigNumber(await icoContract.FOUNDATION_Tokens())) === 0);
       assert(FOUNDATION_Tokens_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.FOUNDATION_HOLDER()))) === 0);
       //
       assert(MAX_OPEN_SOLD_AMOUNT.comparedTo(new BigNumber(await icoContract.MAX_OPEN_SOLD())) === 0);
 
+      assert.equal("0", await icoContract.halted());
+      assert.equal(wallet, await icoContract.wallet());
+      assert.equal(startTime, await icoContract.startTime());
+      assert.equal(endTime, await icoContract.endTime());
+      assert.equal("0", await icoContract.openSoldTokens());
     });
   });
+
+  describe('CONTRACT HALT UNHalt', () => {
+    it ('should halted = true', async function () {
+      await icoContract.halt({from:wallet});
+      assert.equal("1", await icoContract.halted());
+    });
+    it ('should halted = false', async function () {
+      await icoContract.unHalt({from:wallet});
+      assert.equal("0", await icoContract.halted());
+    });
+    it ('should only wallet addr can halt', async function () {
+      await assertFail(async function() {
+        await icoContract.halt({from:accounts[1]})
+      });
+    });
+    it ('should only wallet addr can unhalt', async function () {
+      await assertFail(async function() {
+        await icoContract.unHalt({from:accounts[1]})
+      });
+    });
+  });
+
+  describe('CONTRACT buyDelphyToken', () => {
+    it ('should failed when halted', async function () {
+      await icoContract.halt({from:wallet});
+      await assertFail(async function () {
+        await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
+      })
+    });
+
+    it ('should failed when buy early than startTime', async function () {
+      await icoContract.unHalt({from:wallet});
+    });
+  })
 });
