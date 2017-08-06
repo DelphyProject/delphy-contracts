@@ -73,11 +73,11 @@ contract DelphyICO is Owned {
   uint public constant PRE_ICO_Tokens = TOTAL_TOKENS_PERCENT * 5;
 
   /// dev team 10%
-  address public constant DEV_TEAM_HOLDER = 0xDD91615Ea8De94bC48231c4ae9488891F1648dc5;
+  address public constant DEV_TEAM_HOLDER = 0x0015d8c203d89de2c816eb92b4f6e06efc34073c2b;
   uint public constant DEV_TEAM_Tokens = TOTAL_TOKENS_PERCENT * 10;
 
   /// foundation 9%
-  address public constant FOUNDATION_HOLDER = 0xDD91615Ea8De94bC48231c4ae9488891F1648dc5;
+  address public constant FOUNDATION_HOLDER = 0x00265fef2126c45ce24e8546e954e5d0f1aa0934cc;
   uint public constant FOUNDATION_Tokens = TOTAL_TOKENS_PERCENT * 9;
 
   /// will sold
