@@ -37,12 +37,6 @@ import "./StandardToken.sol";
 /// @title Delphy token contract
 /// @author jsw
 contract DelphyToken is StandardToken {
-
-  /*
-   * EVENTS
-   */
-  event ClaimTokens(address indexed sourceAddress, address indexed destAddress, uint gotTokens);
-
   /*
    *  Constants
    */

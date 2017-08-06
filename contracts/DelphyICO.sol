@@ -126,12 +126,12 @@ contract DelphyICO is Owned {
   }
 
   modifier notEarlierThan(uint x) {
-    require(now >= x);
+    require(getBlockTime() >= x);
     _;
   }
 
   modifier earlierThan(uint x) {
-    require(now < x);
+    require(getBlockTime() < x);
     _;
   }
 
@@ -141,7 +141,7 @@ contract DelphyICO is Owned {
   }
 
   modifier isLaterThan (uint x){
-    assert(now > x);
+    assert(getBlockTime() > x);
     _;
   }
 
@@ -324,7 +324,7 @@ contract DelphyICO is Owned {
   /// @dev Utility function for calculate available tokens and cost ethers
   function costAndBuyTokens(uint availableToken) constant internal returns (uint costValue, uint getTokens){
     // all conditions has checked in the caller functions
-    uint exchangeRate = 250;
+    uint exchangeRate = getTokenTimes();
     getTokens = exchangeRate * msg.value;
 
     if(availableToken >= getTokens){
@@ -346,4 +346,18 @@ contract DelphyICO is Owned {
     }
     return size > 0;
   }
+
+
+  //////////
+  // Testing specific methods
+  //////////
+
+  /// @notice This function is overridden by the test Mocks.
+  function getBlockTime() internal constant returns (uint256) {
+    return block.timestamp;
+  }
+  function getTokenTimes() internal constant returns (uint256) {
+    return 250;
+  }
+
 }

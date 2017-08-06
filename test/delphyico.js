@@ -3,6 +3,38 @@ const DelphyTokenContract = artifacts.require("DelphyToken.sol");
 const assertFail = require("./helpers/assertFail");
 const BigNumber = require('bignumber.js');
 
+/*
+ * NB way, to change evm's blockTime
+ */
+/*
+function send(method, params, callback) {
+  if (typeof params === 'function') {
+    callback = params;
+    params = [];
+  }
+
+  web3.currentProvider.sendAsync({
+    jsonrpc: '2.0',
+    method,
+    params: params || [],
+    id: new Date().getTime(),
+  }, callback);
+}
+
+describe('START OF PUBLIC CONTRIBUTION', () => {
+  before('Time travel to startTime', (done) => {
+    web3.eth.getBlock('latest', (err, result) => {
+      send('evm_increaseTime', [startTime - result.timestamp], (err, result) => {
+        assert.equal(err, null);
+        send('evm_mine', [], (err, result) => {
+          assert.equal(err, null);
+          done();
+        });
+      });
+    });
+  });
+});
+*/
 
 contract('DelphyICO', function (accounts) {
   // Solidity constants
@@ -151,11 +183,57 @@ contract('DelphyICO', function (accounts) {
       await icoContract.halt({from:wallet});
       await assertFail(async function () {
         await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
-      })
+      });
     });
 
     it ('should failed when buy early than startTime', async function () {
       await icoContract.unHalt({from:wallet});
+      await icoContract.setMockedBlockTime(initalBlockTime);
+      await assertFail(async function () {
+        await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
+      });
     });
-  })
+
+    it ('should success when buy between startTime and endTime', async function () {
+      const userIndex = 1;
+      const loopCount = 5;
+      for (let i=0; i<loopCount; i++) {
+        let lockedToken = new BigNumber(await icoContract.lockedBalances(accounts[userIndex]));
+        let openSoldToken = new BigNumber(await icoContract.openSoldTokens());
+        let tokenTimes = new BigNumber(250);
+        const ethMount = 0.2;
+        await icoContract.setMockedBlockTime(startTime + (endTime - startTime) * i / loopCount);
+        await icoContract.buyDelphyToken(accounts[1],{from:accounts[userIndex],value:web3.toWei(ethMount)});
+        const gasMount = (new BigNumber(ethMount)).times(ether).times(tokenTimes);
+        assert((lockedToken.add(gasMount)).comparedTo(new BigNumber(await icoContract.lockedBalances(accounts[userIndex]))) === 0);
+        assert((openSoldToken.add(gasMount)).comparedTo(new BigNumber(await icoContract.openSoldTokens())) === 0);
+      }
+    });
+
+    it ('should success when call fallback function', async function () {
+      const userIndex = 2;
+      const loopCount = 5;
+      const addr = await icoContract.address;
+      for (let i=0; i<loopCount; i++) {
+        let lockedToken = new BigNumber(await icoContract.lockedBalances(accounts[userIndex]));
+        let openSoldToken = new BigNumber(await icoContract.openSoldTokens());
+        let tokenTimes = new BigNumber(250);
+        const ethMount = 0.2;
+        await icoContract.setMockedBlockTime(startTime + (endTime - startTime) * i / loopCount);
+        web3.eth.sendTransaction({from:accounts[userIndex], to:addr, value:web3.toWei(ethMount)});
+        const gasMount = (new BigNumber(ethMount)).times(ether).times(tokenTimes);
+        assert((lockedToken.add(gasMount)).comparedTo(new BigNumber(await icoContract.lockedBalances(accounts[userIndex]))) === 0);
+        assert((openSoldToken.add(gasMount)).comparedTo(new BigNumber(await icoContract.openSoldTokens())) === 0);
+      }
+    });
+
+    it ('should failed when buy later than endTime', async function () {
+      await icoContract.setMockedBlockTime(endTime);
+      await assertFail(async function () {
+        await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
+      });
+    });
+  });
+
+
 });

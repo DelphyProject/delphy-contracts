@@ -4,15 +4,26 @@ import '../DelphyICO.sol';
 
 contract DelphyICOMock is DelphyICO {
 
-  function DelphyICOMock(address _wallet, uint _startTime) DelphyICO(_wallet,_startTime) {}
-
-  function getBlockNumber() internal constant returns (uint) {
-    return mock_blockNumber;
+  function DelphyICOMock(address _wallet, uint _startTime) DelphyICO(_wallet,_startTime) {
+    mock_blockTime = now;
   }
 
-  function setMockedBlockNumber(uint _b) public {
-    mock_blockNumber = _b;
+  function getBlockTime() internal constant returns (uint256) {
+    return mock_blockTime;
   }
 
-  uint mock_blockNumber = 1;
+  function setMockedBlockTime(uint _b) public {
+    mock_blockTime = _b;
+  }
+
+  function getTokenTimes() internal constant returns (uint256) {
+    return mock_tokenTimes;
+  }
+
+  function setMockedTokenTimes(uint _t) public {
+    mock_tokenTimes = _t;
+  }
+
+  uint mock_blockTime = 0;
+  uint mock_tokenTimes = 250;
 }
