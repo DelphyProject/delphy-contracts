@@ -9,15 +9,28 @@ contract('DelphyICO', function (accounts) {
   const days = 24 * hours;
   const weeks = 24 * 7 * hours;
   const years = 52 * weeks;
-  const ether = new BigNumber(Math.pow(10, 18));
+
+  const decimals = 18;
+  const ether = new BigNumber(Math.pow(10, decimals));
 
   // DelphyICO constant fields
   const INTEREST_Tokens = 50;  // 50%
   const PUBLIC_FIRST_Tokens = 18;   // 18%
-  const PUBLIC_SECOND_Tokens = 8;   //
+  const PUBLIC_SECOND_Tokens = 8;   //e
   const PRE_ICO_Tokens = 5;         //
   const DEV_TEAM_Tokens = 10;       //
   const FOUNDATION_Tokens = 9;      //
+
+  const persent_token = new BigNumber(1000000).times(ether);
+
+  const TOTAL_TOKENS_AMOUNT = new BigNumber(100).times(persent_token);
+  const INTEREST_Tokens_AMOUNT = new BigNumber(INTEREST_Tokens).times(persent_token);
+  const PUBLIC_FIRST_Tokens_AMOUNT = new BigNumber(PUBLIC_FIRST_Tokens).times(persent_token);
+  const PUBLIC_SECOND_Tokens_AMOUNT = new BigNumber(PUBLIC_SECOND_Tokens).times(persent_token);
+  const PRE_ICO_Tokens_AMOUNT = new BigNumber(PRE_ICO_Tokens).times(persent_token);
+  const DEV_TEAM_Tokens_AMOUNT = new BigNumber(DEV_TEAM_Tokens).times(persent_token);
+  const FOUNDATION_Tokens_AMOUNT = new BigNumber(FOUNDATION_Tokens).times(persent_token);
+
 
 
   // Test globals
@@ -80,10 +93,22 @@ contract('DelphyICO', function (accounts) {
     });
   });
 
-  // describe('CONTRACT DEPLOYMENT', () => {
+  describe('CONTRACT DEPLOYMENT', () => {
     it('Deploy DelphyICO contracts', async function() {
       icoContract = await DelphyICOMock.new(wallet, startTime);
-      tokenContract = DelphyICOMock.delphyToken;
+      tokenContract = await icoContract.delphyToken();
     });
-  // });
+
+    it('Checks initial parameters', async function () {
+      // check constant
+      assert(TOTAL_TOKENS_AMOUNT.comparedTo(new BigNumber(await icoContract.TOTAL_TOKENS())) === 0);
+      assert(INTEREST_Tokens_AMOUNT.cmp(new BigNumber(await icoContract.INTEREST_Tokens())) === 0);
+      assert(PUBLIC_FIRST_Tokens_AMOUNT.cmp(new BigNumber(await icoContract.PUBLIC_FIRST_Tokens())) === 0);
+      assert(PUBLIC_SECOND_Tokens_AMOUNT.cmp(new BigNumber(await icoContract.PUBLIC_SECOND_Tokens())) === 0);
+      assert(PRE_ICO_Tokens_AMOUNT.cmp(new BigNumber(await icoContract.PRE_ICO_Tokens())) === 0);
+      assert(DEV_TEAM_Tokens_AMOUNT.cmp(new BigNumber(await icoContract.DEV_TEAM_Tokens())) === 0);
+      assert(FOUNDATION_Tokens_AMOUNT.cmp(new BigNumber(await icoContract.FOUNDATION_Tokens())) === 0);
+      // check sta
+    });
+  });
 });
