@@ -156,6 +156,7 @@ contract DelphyICO is Owned {
     _;
   }
 
+
   /**
    * CONSTRUCTOR
    *
@@ -196,6 +197,7 @@ contract DelphyICO is Owned {
     delphyToken = new DelphyToken(orgs, nums);
   }
 
+
   /**
    * Fallback function
    *
@@ -205,9 +207,11 @@ contract DelphyICO is Owned {
     buyDelphyToken(msg.sender);
   }
 
+
   /*
    * CONSTANT METHODS
    */
+
 
   /*
    * PUBLIC FUNCTIONS
@@ -235,6 +239,7 @@ contract DelphyICO is Owned {
     return true;
   }
 
+  /// @dev retrieve tokens if not sold out
   function finishICO()
     public
     onlyWallet
@@ -262,6 +267,7 @@ contract DelphyICO is Owned {
     lockedBalances[receipent] = 0;
   }
 
+
   /// @dev Emergency situation that requires contribution period to stop.
   /// Contributing not possible anymore.
   function halt() public onlyWallet{
@@ -274,10 +280,12 @@ contract DelphyICO is Owned {
     halted = false;
   }
 
+
   /*
    * INTERNAL FUNCTIONS
    */
   /// @dev Buy delphy tokens by partners
+  /// @param receipient is the receiver of delphy tokens
   function buyFromPartner(address receipient) internal {
     uint partnerAvailable = MAX_OPEN_SOLD.sub(openSoldTokens);
 
@@ -290,7 +298,9 @@ contract DelphyICO is Owned {
     partnersBought[receipient] = partnersBought[receipient].add(toCollect);
     buyCommon(receipient, toFund, toCollect);
   }
+
   /// @dev Buy Delphy token normally
+  /// @param receipient is the receiver of delphy tokens
   function buyNormal(address receipient) internal {
     // Do not allow contracts to game the system
     require(!isContract(msg.sender));
@@ -305,6 +315,9 @@ contract DelphyICO is Owned {
   }
 
   /// @dev Utility function for bug delphy token
+  /// @param receipient is the receiver of delphy tokens
+  /// @param toFund is the ether amount to charge
+  /// @param tokenCollect the amount of delphy tokens that will receive
   function buyCommon(address receipient, uint toFund, uint tokenCollect) internal {
     require(msg.value >= toFund); // double check
 
@@ -322,6 +335,7 @@ contract DelphyICO is Owned {
   }
 
   /// @dev Utility function for calculate available tokens and cost ethers
+  /// @param availableToken is the amount of delphy tokens that will be send
   function costAndBuyTokens(uint availableToken) constant internal returns (uint costValue, uint getTokens){
     // all conditions has checked in the caller functions
     uint exchangeRate = getTokenTimes();
@@ -348,14 +362,14 @@ contract DelphyICO is Owned {
   }
 
 
-  //////////
-  // Testing specific methods
-  //////////
-
+  /*
+   * Testing specific methods
+   */
   /// @notice This function is overridden by the test Mocks.
   function getBlockTime() internal constant returns (uint256) {
     return block.timestamp;
   }
+  /// @notice This function is overridden by the test Mocks.
   function getTokenTimes() internal constant returns (uint256) {
     return 250;
   }

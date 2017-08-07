@@ -45,8 +45,13 @@ contract DelphyToken is StandardToken {
   uint8 constant public decimals = 18;
   uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
 
-  /*
-   *  Public functions
+
+  /**
+   * CONSTRUCTOR
+   *
+   * @dev Initialize the Delphy ICO contract
+   * @param owners : the pre-allocate owners's addresses
+   * @param tokens : the pre-allocate owners's delphy token amount
    */
   function DelphyToken(address[] owners, uint[] tokens)
     public
