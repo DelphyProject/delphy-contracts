@@ -1,5 +1,3 @@
-pragma solidity ^0.4.11;
-
 /*
   Copyright 2017 Delphy Foundation.
 
@@ -17,8 +15,6 @@ pragma solidity ^0.4.11;
 
 */
 
-
-
 //   /$$$$$$$            /$$           /$$
 //  | $$__  $$          | $$          | $$
 //  | $$  \ $$  /$$$$$$ | $$  /$$$$$$ | $$$$$$$  /$$   /$$
@@ -30,42 +26,36 @@ pragma solidity ^0.4.11;
 //                          | $$                 /$$  | $$
 //                          | $$                |  $$$$$$/
 //                          |__/                 \______/
-//  Code style according to: https://github.com/DelphyProject/delphy_contracts/blob/master/style-guide.rst
 
+pragma solidity ^0.4.11;
 import "./StandardToken.sol";
 
 /// @title Delphy token contract
 /// @author jsw
 contract DelphyToken is StandardToken {
-  /*
-   *  Constants
-   */
-  string constant public name = "Delphy Token";
-  string constant public symbol = "DPY";
-  uint8 constant public decimals = 18;
-  uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
+    /// Constants
+    string constant public name = "Delphy Token";
+    string constant public symbol = "DPY";
+    uint8 constant public decimals = 18;
+    uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
 
+    // CONSTRUCTOR
+    /// @dev Initialize the Delphy ICO contract
+    /// @param owners is the pre-allocate owners's addresses
+    /// @param tokens is the pre-allocate owners's delphy token amount
+    function DelphyToken(address[] owners, uint[] tokens)
+        public
+    {
+        totalSupply = 0;
 
-  /**
-   * CONSTRUCTOR
-   *
-   * @dev Initialize the Delphy ICO contract
-   * @param owners : the pre-allocate owners's addresses
-   * @param tokens : the pre-allocate owners's delphy token amount
-   */
-  function DelphyToken(address[] owners, uint[] tokens)
-    public
-  {
-    totalSupply = 0;
+        for (uint i=0; i<owners.length; i++) {
+            require (owners[i] != 0);
 
-    for (uint i=0; i<owners.length; i++) {
-      require (owners[i] != 0);
+            balances[owners[i]] += tokens[i];
+            Transfer(0, owners[i], tokens[i]);
+            totalSupply += tokens[i];
+        }
 
-      balances[owners[i]] += tokens[i];
-      Transfer(0, owners[i], tokens[i]);
-      totalSupply += tokens[i];
+        require (totalSupply == TOTAL_TOKENS);
     }
-
-    require (totalSupply == TOTAL_TOKENS);
-  }
 }

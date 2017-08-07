@@ -27,7 +27,7 @@ contract StandardToken is Token {
         public
         returns (bool)
     {
-        if (   !balances[msg.sender].safeToSub(value)
+        if (!balances[msg.sender].safeToSub(value)
             || !balances[to].safeToAdd(value))
             return false;
         balances[msg.sender] -= value;
