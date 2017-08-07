@@ -37,10 +37,14 @@ import "./DelphyToken.sol";
 contract DelphyICO is Owned {
     using Math for uint;
 
-    // EVENTS
+    /*
+     *  Events
+     */
     event NewSale(address indexed destAddress, uint ethCost, uint gotTokens);
 
-    // Constants
+    /*
+     *  Constants
+     */
     /// -        intrest (presail in 24 months)         -       public sail       -pre-ico- dev team   -foundation-
     /// -                       50%                     -        (18 + 8)%        -   5%  -    10%     -    9%    -
     uint8 public constant decimals = 18;
@@ -48,27 +52,29 @@ contract DelphyICO is Owned {
     uint public constant TOTAL_TOKENS_PERCENT = 1000000 * 10**18; // 1e / 100
     uint public constant ICO_DURATION = 5 days;
     /// interest 50%
-    address public INTEREST_HOLDER = 0x000d0844f4d8be3c89c6e086fd00b35a6ae3312d8f;
+    address public INTEREST_HOLDER = 0xe1f077afb9423d025af74051a6be7b6fc1729345;
     uint public constant INTEREST_TOKENS = TOTAL_TOKENS_PERCENT * 50;
     /// first 18%
-    address public constant PUBLIC_FIRST_HOLDER = 0xB1EFca62C555b49E67363B48aE5b8Af3C7E3e656;
+    address public constant PUBLIC_FIRST_HOLDER = 0x49e21ee5867da3b87d1268a08c1b4a1f2d19c985;
     uint public constant PUBLIC_FIRST_TOKENS = TOTAL_TOKENS_PERCENT * 18;
     /// second 8%
-    // address public constant PUBLIC_SECOND_HOLDER = 0x00779e0e4c6083cfd26dE77B4dbc107A7EbB99d2;
+    // address public constant PUBLIC_SECOND_HOLDER = 0x2153a1177d7f81ff90debb0f1e85b46e2d1e5bde;
     uint public constant PUBLIC_SECOND_TOKENS = TOTAL_TOKENS_PERCENT * 8;
     /// pre-ico 5%
-    address public constant PRE_ICO_HOLDER = 0xDD91615Ea8De94bC48231c4ae9488891F1648dc5;
+    address public constant PRE_ICO_HOLDER = 0xccf9ca1a610a92eb7358fa60be43e36d0d7d3ab1;
     uint public constant PRE_ICO_TOKENS = TOTAL_TOKENS_PERCENT * 5;
     /// dev team 10%
-    address public constant DEV_TEAM_HOLDER = 0x0015d8c203d89de2c816eb92b4f6e06efc34073c2b;
+    address public constant DEV_TEAM_HOLDER = 0x38705baf9a11ebb0ecbaaf19440cd35f450a6627;
     uint public constant DEV_TEAM_TOKENS = TOTAL_TOKENS_PERCENT * 10;
     /// foundation 9%
-    address public constant FOUNDATION_HOLDER = 0x00265fef2126c45ce24e8546e954e5d0f1aa0934cc;
+    address public constant FOUNDATION_HOLDER = 0xa7d930b7dee95e5755b6ce28ced4f83b3cc11e90;
     uint public constant FOUNDATION_TOKENS = TOTAL_TOKENS_PERCENT * 9;
     /// will sold
     uint public constant MAX_OPEN_SOLD = PUBLIC_SECOND_TOKENS;
 
-    // Storage
+    /*
+     *  Storage
+     */
     /// Fields that are only changed in constructor
     /// All deposited ETH will be instantly forwarded to this address.
     address public wallet;
@@ -87,7 +93,9 @@ contract DelphyICO is Owned {
     /// token bought by addr
     mapping (address => uint256) public lockedBalances;
 
-    // MODIFIERS
+    /*
+     *  Modifiers
+     */
     modifier onlyWallet {
         require(msg.sender == wallet);
         _;
@@ -133,8 +141,10 @@ contract DelphyICO is Owned {
         _;
     }
 
-    // CONSTRUCTOR
-    /// @dev Initialize the Delphy ICO contract
+    /*
+     *  Public functions
+     */
+    /// @dev Contract constructor function set Delphy ICO contract
     /// @param _wallet The escrow account address, all ethers will be sent to this address.
     /// @param _startTime ICO start time
     function DelphyICO(address _wallet, uint _startTime) public {
@@ -168,7 +178,6 @@ contract DelphyICO is Owned {
         delphyToken = new DelphyToken(orgs, nums);
     }
 
-    // PUBLIC FUNCTIONS
     /// @dev If anybody sends Ether directly to this  contract, consider he is getting delphy token
     function () public payable notHalted ceilingNotReached {
         buyDelphyToken(msg.sender);
@@ -218,6 +227,9 @@ contract DelphyICO is Owned {
         isLaterThan(endTime)
         isValidPayload
     {
+        if (receiver == 0x0)
+            receiver = msg.sender;
+
         uint tokenCount = lockedBalances[receiver] ;
         require(tokenCount != 0x0);
 
@@ -237,7 +249,9 @@ contract DelphyICO is Owned {
         halted = false;
     }
 
-    // Internal functions
+    /*
+     *  Internal functions
+     */
     /// @dev Buy Delphy token normally
     /// @param receiver is the receiver of delphy tokens
     function doBuyDelphyToken(address receiver) internal {
@@ -304,8 +318,9 @@ contract DelphyICO is Owned {
         return size > 0;
     }
 
-
-    // Testing specific methods
+    /*
+     *  Testing functions
+     */
     /// @notice This function is overridden by the test Mocks.
     function getBlockTime() internal constant returns (uint256) {
         return block.timestamp;

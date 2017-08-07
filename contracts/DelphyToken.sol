@@ -33,14 +33,18 @@ import "./StandardToken.sol";
 /// @title Delphy token contract
 /// @author jsw
 contract DelphyToken is StandardToken {
-    /// Constants
+    /*
+     *  Constants
+     */
     string constant public name = "Delphy Token";
     string constant public symbol = "DPY";
     uint8 constant public decimals = 18;
     uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
 
-    // CONSTRUCTOR
-    /// @dev Initialize the Delphy ICO contract
+    /*
+     *  Public functions
+     */
+    /// @dev Initialize the Delphy Token contract
     /// @param owners is the pre-allocate owners's addresses
     /// @param tokens is the pre-allocate owners's delphy token amount
     function DelphyToken(address[] owners, uint[] tokens)
