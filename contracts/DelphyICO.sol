@@ -45,16 +45,12 @@ contract DelphyICO is Owned {
   /*
    *  Constants
    */
-  /// ------------------------------------------------------------------------------------------------------------
-  /// |                                                |                         |       |            |          |
-  /// |        INTEREST (PRESALE IN 24 MONTHS)         |       PUBLIC SALE       |PRE-ICO| DEV TEAM   |FOUNDATION|
-  /// |                       50%                      |        (18 + 8)%        |   5%  |    10%     |    9%    |
-  /// ------------------------------------------------------------------------------------------------------------
-
+  /// -        intrest (presail in 24 months)         -       public sail       -pre-ico- dev team   -foundation-
+  /// -                       50%                     -        (18 + 8)%        -   5%  -    10%     -    9%    -
   uint8 public constant decimals = 18;
   uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
   uint public constant TOTAL_TOKENS_PERCENT = 1000000 * 10**18; // 1e / 100
-  uint public constant MAX_ICO_DURATION = 5 days;
+  uint public constant ICO_DURATION = 5 days;
 
   /// interest 50%
   address public INTEREST_HOLDER = 0x000d0844f4d8be3c89c6e086fd00b35a6ae3312d8f;
@@ -102,8 +98,6 @@ contract DelphyICO is Owned {
   /// Due to an emergency, set this to true to halt the contribution
   bool public halted;
 
-  /// Accumulator for partner sold
-  mapping (address => uint256) public partnersBought;
   /// Buy
   mapping (address => uint256) public lockedBalances;
 
@@ -172,7 +166,7 @@ contract DelphyICO is Owned {
     halted = false;
     wallet = _wallet;
     startTime = _startTime;
-    endTime = startTime + MAX_ICO_DURATION;
+    endTime = startTime + ICO_DURATION;
     openSoldTokens = 0;
 
     address[] memory orgs = new address[](6);
@@ -217,8 +211,8 @@ contract DelphyICO is Owned {
    * PUBLIC FUNCTIONS
    */
   /// @dev Exchange msg.value ether to Delphy for account recepient
-  /// @param receipient Delphy tokens receiver
-  function buyDelphyToken(address receipient)
+  /// @param receiver Delphy tokens receiver
+  function buyDelphyToken(address receiver)
     public
     payable
     notHalted
@@ -228,13 +222,12 @@ contract DelphyICO is Owned {
     earlierThan(endTime)
     returns (bool)
   {
-    require(receipient != 0x0);
     require(msg.value >= 0.1 ether);
 
-    if (msg.sender != receipient)
-      buyFromPartner(receipient);
-    else
-      buyNormal(receipient);
+    if (receiver == 0x0)
+      receiver = msg.sender;
+
+    doBuyDelphyToken(receiver);
 
     return true;
   }
@@ -255,16 +248,16 @@ contract DelphyICO is Owned {
   }
 
   /// @dev Locking period has passed - Locked tokens have turned into tradeable
-  ///      All tokens owned by receipent will be tradeable
-  function claimTokens(address receipent)
+  ///      All tokens owned by receiver will be tradeable
+  function claimTokens(address receiver)
     isLaterThan(endTime)
     isValidPayload
   {
-    uint tokenCount = lockedBalances[receipent] ;
+    uint tokenCount = lockedBalances[receiver] ;
     require(tokenCount != 0x0);
 
-    require(delphyToken.transfer(receipent, tokenCount));
-    lockedBalances[receipent] = 0;
+    require(delphyToken.transfer(receiver, tokenCount));
+    lockedBalances[receiver] = 0;
   }
 
 
@@ -281,27 +274,9 @@ contract DelphyICO is Owned {
   }
 
 
-  /*
-   * INTERNAL FUNCTIONS
-   */
-  /// @dev Buy delphy tokens by partners
-  /// @param receipient is the receiver of delphy tokens
-  function buyFromPartner(address receipient) internal {
-    uint partnerAvailable = MAX_OPEN_SOLD.sub(openSoldTokens);
-
-    require(partnerAvailable > 0);
-
-    uint toFund;
-    uint toCollect;
-    (toFund,  toCollect)= costAndBuyTokens(partnerAvailable);
-
-    partnersBought[receipient] = partnersBought[receipient].add(toCollect);
-    buyCommon(receipient, toFund, toCollect);
-  }
-
   /// @dev Buy Delphy token normally
-  /// @param receipient is the receiver of delphy tokens
-  function buyNormal(address receipient) internal {
+  /// @param receiver is the receiver of delphy tokens
+  function doBuyDelphyToken(address receiver) internal {
     // Do not allow contracts to game the system
     require(!isContract(msg.sender));
 
@@ -310,22 +285,22 @@ contract DelphyICO is Owned {
 
     uint toFund;
     uint toCollect;
-    (toFund, toCollect) = costAndBuyTokens(tokenAvailable);
-    buyCommon(receipient, toFund, toCollect);
+    (toFund, toCollect) = calcEtherAndToken(tokenAvailable);
+    doBuy(receiver, toFund, toCollect);
   }
 
   /// @dev Utility function for bug delphy token
-  /// @param receipient is the receiver of delphy tokens
+  /// @param receiver is the receiver of delphy tokens
   /// @param toFund is the ether amount to charge
   /// @param tokenCollect the amount of delphy tokens that will receive
-  function buyCommon(address receipient, uint toFund, uint tokenCollect) internal {
+  function doBuy(address receiver, uint toFund, uint tokenCollect) internal {
     require(msg.value >= toFund); // double check
 
     if(toFund > 0) {
-      lockedBalances[receipient] += tokenCollect;
+      lockedBalances[receiver] += tokenCollect;
       wallet.transfer(toFund);
       openSoldTokens = openSoldTokens.add(tokenCollect);
-      NewSale(receipient, toFund, tokenCollect);
+      NewSale(receiver, toFund, tokenCollect);
     }
 
     uint toReturn = msg.value.sub(toFund);
@@ -336,7 +311,7 @@ contract DelphyICO is Owned {
 
   /// @dev Utility function for calculate available tokens and cost ethers
   /// @param availableToken is the amount of delphy tokens that will be send
-  function costAndBuyTokens(uint availableToken) constant internal returns (uint costValue, uint getTokens){
+  function calcEtherAndToken(uint availableToken) constant internal returns (uint costValue, uint getTokens){
     // all conditions has checked in the caller functions
     uint exchangeRate = getTokenTimes();
     getTokens = exchangeRate * msg.value;

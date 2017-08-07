@@ -234,25 +234,23 @@ contract('DelphyICO', function (accounts) {
       }
     });
 
-    it ('should success when buy from partner', async function () {
+    it ('should success when buy for other user', async function () {
       const userIndex = 3;
-      const partnerIndex = 4;
+      const receiverIndex = 4;
       const loopCount = 5;
       for (let i=0; i<loopCount; i++) {
-        let lockedToken = new BigNumber(await icoContract.lockedBalances(accounts[partnerIndex]));
-        let partnerToken = new BigNumber(await icoContract.partnersBought(accounts[partnerIndex]));
+        let lockedToken = new BigNumber(await icoContract.lockedBalances(accounts[receiverIndex]));
         let openSoldToken = new BigNumber(await icoContract.openSoldTokens());
         let tokenTimes = new BigNumber(250);
         const balance = new BigNumber(web3.eth.getBalance(wallet));
         const ethMount = 0.2;
         await icoContract.setMockedBlockTime(startTime + (endTime - startTime) * i / loopCount);
-        await icoContract.buyDelphyToken(accounts[partnerIndex],{from:accounts[userIndex],value:web3.toWei(ethMount)});
+        await icoContract.buyDelphyToken(accounts[receiverIndex],{from:accounts[userIndex],value:web3.toWei(ethMount)});
         const tokenMount = (new BigNumber(ethMount)).times(ether).times(tokenTimes);
         const gasMount = (new BigNumber(ethMount)).times(ether);
-        assert((lockedToken.add(tokenMount)).comparedTo(new BigNumber(await icoContract.lockedBalances(accounts[partnerIndex]))) === 0);
+        assert((lockedToken.add(tokenMount)).comparedTo(new BigNumber(await icoContract.lockedBalances(accounts[receiverIndex]))) === 0);
         assert((openSoldToken.add(tokenMount)).comparedTo(new BigNumber(await icoContract.openSoldTokens())) === 0);
         assert(balance.add(gasMount).comparedTo(new BigNumber(web3.eth.getBalance(wallet))) === 0);
-        assert(partnerToken.add(tokenMount).comparedTo(new BigNumber(await icoContract.partnersBought(accounts[partnerIndex]))) === 0);
       }
     });
 
