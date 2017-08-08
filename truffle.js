@@ -1,7 +1,8 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
-
+//a4369e77024c2ade4994a9345af5c47598c7cfb36c65e8a4a3117519883d9014
 const mnemonic = process.env.TEST_MNEMONIC || 'delphy mnemonic delphy mnemonic delphy mnemonic delphy mnemonic delphy mnemonic delphy mnemonic';
 const providerRopsten = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/', 0);
+const providerRinkeby = new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/', 0);
 const providerKovan = new HDWalletProvider(mnemonic, 'https://kovan.infura.io', 0);
 
 module.exports = {
@@ -45,6 +46,14 @@ module.exports = {
       provider: providerRopsten,
       gas: 4000000,
       gasPrice: 20e9,
+    },
+    rinkeby: {
+        host: "118.190.71.27",
+        port: 8545,
+        network_id: 4,
+        gas: 4000000,
+        gasPrice: 20e9,
+        from: "0x2d0e7c0813a51d3bd1d08246af2a8a7a57d8922e",
     },
     kovan: {
       network_id: 42,

@@ -27,7 +27,8 @@
     "test": "mocha --reporter spec",
     "testrpc": "truffle test --network development",
     "migrate": "truffle migrate --reset --network development_migrate",
-    "ropsten": "truffle test --network ropsten"
+    "ropsten": "truffle migrate --network ropsten",
+    "rinkeby": "truffle migrate --network rinkeby"
   },
   "author": "jsw",
   "license": "ISC"
