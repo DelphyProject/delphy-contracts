@@ -18,6 +18,9 @@ contract Owned {
         _;
     }
 
+    /*
+     *  Public functions
+     */
     /// @notice The Constructor assigns the message sender to be `owner`
     function Owned() {
         owner = msg.sender;
