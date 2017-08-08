@@ -52,22 +52,22 @@ contract DelphyICO is Owned {
     uint public constant TOTAL_TOKENS_PERCENT = 1000000 * 10**18; // 1e / 100
     uint public constant ICO_DURATION = 5 days;
     /// interest 50%
-    address public INTEREST_HOLDER = 0xe1f077afb9423d025af74051a6be7b6fc1729345;
+    address public INTEREST_HOLDER = 0xad854341e7989f5542189bb52265337e2993b7bc;
     uint public constant INTEREST_TOKENS = TOTAL_TOKENS_PERCENT * 50;
     /// first 18%
-    address public constant PUBLIC_FIRST_HOLDER = 0x49e21ee5867da3b87d1268a08c1b4a1f2d19c985;
+    address public constant PUBLIC_FIRST_HOLDER = 0x431cf2c7310d15ec9316510daf6bbc48557ecb2c;
     uint public constant PUBLIC_FIRST_TOKENS = TOTAL_TOKENS_PERCENT * 18;
     /// second 8%
-    // address public constant PUBLIC_SECOND_HOLDER = 0x2153a1177d7f81ff90debb0f1e85b46e2d1e5bde;
+    // address public constant PUBLIC_SECOND_HOLDER = 0x4a75c0bd3e9b71a99fc9a5caa92fcdb9bc62a374;
     uint public constant PUBLIC_SECOND_TOKENS = TOTAL_TOKENS_PERCENT * 8;
     /// pre-ico 5%
-    address public constant PRE_ICO_HOLDER = 0xccf9ca1a610a92eb7358fa60be43e36d0d7d3ab1;
+    address public constant PRE_ICO_HOLDER = 0x32d192a05030f3cf34ddb017b1306fb0e1378e1e;
     uint public constant PRE_ICO_TOKENS = TOTAL_TOKENS_PERCENT * 5;
     /// dev team 10%
-    address public constant DEV_TEAM_HOLDER = 0x38705baf9a11ebb0ecbaaf19440cd35f450a6627;
+    address public constant DEV_TEAM_HOLDER = 0x24b7c7800a3636844898832463fb6934337d8518;
     uint public constant DEV_TEAM_TOKENS = TOTAL_TOKENS_PERCENT * 10;
     /// foundation 9%
-    address public constant FOUNDATION_HOLDER = 0xa7d930b7dee95e5755b6ce28ced4f83b3cc11e90;
+    address public constant FOUNDATION_HOLDER = 0xd6355e36b4715d7ef80432ed0f7063febe0806a5;
     uint public constant FOUNDATION_TOKENS = TOTAL_TOKENS_PERCENT * 9;
     /// will sold
     uint public constant MAX_OPEN_SOLD = PUBLIC_SECOND_TOKENS;
