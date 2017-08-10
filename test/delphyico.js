@@ -48,7 +48,7 @@ contract('DelphyICO', function (accounts) {
     const ether = new BigNumber(Math.pow(10, decimals));
 
     // DelphyICO constant fields
-    const INTEREST_TOKENS = 50;  // 50%
+    const BONUS_TOKENS = 50;  // 50%
     const PUBLIC_FIRST_TOKENS = 18;   // 18%
     const PUBLIC_SECOND_TOKENS = 8;   //e
     const PRE_ICO_TOKENS = 5;         //
@@ -59,7 +59,7 @@ contract('DelphyICO', function (accounts) {
     const persent_token = new BigNumber(1000000).times(ether);
 
     const TOTAL_TOKENS_AMOUNT = new BigNumber(100).times(persent_token);
-    const INTEREST_TOKENS_AMOUNT = new BigNumber(INTEREST_TOKENS).times(persent_token);
+    const BONUS_TOKENS_AMOUNT = new BigNumber(BONUS_TOKENS).times(persent_token);
     const PUBLIC_FIRST_TOKENS_AMOUNT = new BigNumber(PUBLIC_FIRST_TOKENS).times(persent_token);
     const PUBLIC_SECOND_TOKENS_AMOUNT = new BigNumber(PUBLIC_SECOND_TOKENS).times(persent_token);
     const PRE_ICO_TOKENS_AMOUNT = new BigNumber(PRE_ICO_TOKENS).times(persent_token);
@@ -123,7 +123,7 @@ contract('DelphyICO', function (accounts) {
 
     describe('CONTRIBUTION CONTRACT STATIC CHECK', () => {
         it('Total Stake equal 100', (done) => {
-            assert.equal( INTEREST_TOKENS + PUBLIC_FIRST_TOKENS + PUBLIC_SECOND_TOKENS
+            assert.equal( BONUS_TOKENS + PUBLIC_FIRST_TOKENS + PUBLIC_SECOND_TOKENS
                 + PRE_ICO_TOKENS + DEV_TEAM_TOKENS + FOUNDATION_TOKENS,
                 100);
             done();
@@ -141,13 +141,13 @@ contract('DelphyICO', function (accounts) {
             assert(TOTAL_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.totalSupply())) === 0);
 
             // check token balance
-            assert(INTEREST_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.INTEREST_HOLDER()))) === 0);
+            assert(BONUS_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.BONUS_HOLDER()))) === 0);
             assert(PUBLIC_FIRST_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.PUBLIC_FIRST_HOLDER()))) === 0);
             assert(PUBLIC_SECOND_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.address))) === 0);
             assert(PRE_ICO_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.PRE_ICO_HOLDER()))) === 0);
             assert(DEV_TEAM_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.DEV_TEAM_HOLDER()))) === 0);
             assert(FOUNDATION_TOKENS_AMOUNT.comparedTo(new BigNumber(await tokenContract.balanceOf(await icoContract.FOUNDATION_HOLDER()))) === 0);
-            //
+
             assert(MAX_OPEN_SOLD_AMOUNT.comparedTo(new BigNumber(await icoContract.MAX_OPEN_SOLD())) === 0);
 
             assert.equal("0", await icoContract.halted());

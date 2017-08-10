@@ -27,74 +27,97 @@
 //                          | $$                 /$$  | $$
 //                          | $$                |  $$$$$$/
 //                          |__/                 \______/
+
 pragma solidity ^0.4.11;
 import "./Math.sol";
 import "./Owned.sol";
 import "./DelphyToken.sol";
 
-/// @title DelphyICO token contract
-/// @author jsw
+
+/// @title DelphyICO Contribution contract
+/// For Delphy ICO details: https://delphy.org/index.html#ICO
+/// For Delphy Project: https://delphy.org
+/// @author jsw@delphy.org
 contract DelphyICO is Owned {
     using Math for uint;
 
     /*
      *  Events
      */
+
     event NewSale(address indexed destAddress, uint ethCost, uint gotTokens);
 
     /*
      *  Constants
      */
-    /// -        intrest (presail in 24 months)         -       public sail       -pre-ico- dev team   -foundation-
+
+    /// - Delphy token distribution
+    ///
+    /// -        bonus (post-sail in 24 months)         -       public sail       -pre-ico- dev team   -foundation-
     /// -                       50%                     -        (18 + 8)%        -   5%  -    10%     -    9%    -
+    ///
     uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
     uint public constant TOTAL_TOKENS_PERCENT = 1000000 * 10**18; // 1e / 100
     uint public constant ICO_DURATION = 5 days;
-    /// interest 50%
-    address public INTEREST_HOLDER = 0xad854341e7989F5542189bB52265337E2993B7bc;
-    uint public constant INTEREST_TOKENS = TOTAL_TOKENS_PERCENT * 50;
-    /// first 18%
+
+    /// bonus coin distribution 50%
+    address public BONUS_HOLDER = 0xad854341e7989F5542189bB52265337E2993B7bc;
+    uint public constant BONUS_TOKENS = TOTAL_TOKENS_PERCENT * 50;
+
+    /// first round ICO: 18%
     address public constant PUBLIC_FIRST_HOLDER = 0x431Cf2c7310d15Ec9316510dAF6BbC48557ecB2C;
     uint public constant PUBLIC_FIRST_TOKENS = TOTAL_TOKENS_PERCENT * 18;
-    /// second 8%
-    // address public constant PUBLIC_SECOND_HOLDER = 0x4a75c0bD3e9B71A99fC9A5CAA92fcdb9Bc62a374;
+
+    /// second round ICO: 8%
+    /// address public constant PUBLIC_SECOND_HOLDER = 0x4a75c0bD3e9B71A99fC9A5CAA92fcdb9Bc62a374;
     uint public constant PUBLIC_SECOND_TOKENS = TOTAL_TOKENS_PERCENT * 8;
+
     /// pre-ico 5%
     address public constant PRE_ICO_HOLDER = 0x32d192A05030F3Cf34DDb017b1306fB0E1378E1E;
     uint public constant PRE_ICO_TOKENS = TOTAL_TOKENS_PERCENT * 5;
+
     /// dev team 10%
     address public constant DEV_TEAM_HOLDER = 0x24b7c7800a3636844898832463FB6934337D8518;
     uint public constant DEV_TEAM_TOKENS = TOTAL_TOKENS_PERCENT * 10;
-    /// foundation 9%
+
+    /// Delphy Foundation 9%
     address public constant FOUNDATION_HOLDER = 0xD6355e36b4715D7Ef80432ED0F7063FEbe0806A5;
     uint public constant FOUNDATION_TOKENS = TOTAL_TOKENS_PERCENT * 9;
-    /// will sold
+
+    /// maximum tokens to-be-sold
     uint public constant MAX_OPEN_SOLD = PUBLIC_SECOND_TOKENS;
 
     /*
      *  Storage
      */
+
     /// Fields that are only changed in constructor
     /// All deposited ETH will be instantly forwarded to this address.
     address public wallet;
+
     /// ICO start time
     uint public startTime;
+
     /// ICO end time
     uint public endTime;
-    /// ERC20 compilant Delphy token contact instance
+
+    /// ERC20 compliant Delphy token contact instance
     DelphyToken public delphyToken;
 
     /// Fields that can be changed by functions
-    /// Accumulator for open sold tokens
+    /// Accumulator for tokens sold in ICO
     uint public openSoldTokens;
-    /// Due to an emergency, set this to true to halt the contribution
+
+    /// In emergency, set this to true to halt the contribution
     bool public halted;
-    /// token bought by addr
+
+    /// tokens bought by address
     mapping (address => uint256) public lockedBalances;
 
     /*
      *  Modifiers
      */
+
     modifier onlyWallet {
         require(msg.sender == wallet);
         _;
@@ -143,6 +166,7 @@ contract DelphyICO is Owned {
     /*
      *  Public functions
      */
+
     /// @dev Contract constructor function set Delphy ICO contract
     /// @param _wallet The escrow account address, all ethers will be sent to this address.
     /// @param _startTime ICO start time
@@ -157,8 +181,8 @@ contract DelphyICO is Owned {
 
         address[] memory orgs = new address[](6);
         uint[] memory nums = new uint[](6);
-        orgs[0] = INTEREST_HOLDER;
-        nums[0] = INTEREST_TOKENS;
+        orgs[0] = BONUS_HOLDER;
+        nums[0] = BONUS_TOKENS;
 
         orgs[1] = PUBLIC_FIRST_HOLDER;
         nums[1] = PUBLIC_FIRST_TOKENS;
@@ -177,13 +201,14 @@ contract DelphyICO is Owned {
         delphyToken = new DelphyToken(orgs, nums);
     }
 
-    /// @dev If anybody sends Ether directly to this  contract, consider he is getting delphy token
+    /// @dev If Ethers are sent directly to this contract,
+    //          then Delphy tokens are considered being purchased.
     function () public payable notHalted ceilingNotReached {
         buyDelphyToken(msg.sender);
     }
 
-    /// @dev Exchange msg.value ether to Delphy for account receiver
-    /// @param receiver Delphy tokens receiver
+    /// @dev purchase Delphy Tokens with Ethers for receiver.
+    /// @param receiver the address of Delphy tokens receiver
     function buyDelphyToken(address receiver)
         public
         payable
@@ -204,7 +229,7 @@ contract DelphyICO is Owned {
         return true;
     }
 
-    /// @dev retrieve tokens if not sold out
+    /// @dev collect all left-over tokens when ICO ends
     function finishICO()
         public
         onlyWallet
@@ -219,7 +244,7 @@ contract DelphyICO is Owned {
         return true;
     }
 
-    /// @dev Locking period has passed - Locked tokens have turned into tradeable
+    /// @dev After locking period passes, unlock tokens.
     ///      All tokens owned by receiver will be tradeable
     function claimTokens(address receiver)
         public
@@ -236,14 +261,14 @@ contract DelphyICO is Owned {
         lockedBalances[receiver] = 0;
     }
 
-    /// @dev Emergency situation that requires contribution period to stop.
-    /// Contributing not possible anymore.
+    /// @dev Stop contribution when in emergency.
+    /// Contribution is not possible anymore.
     function halt() public onlyWallet {
         halted = true;
     }
 
-    /// @dev Emergency situation resolved.
-    /// Contributing becomes possible again withing the outlined restrictions.
+    /// @dev Un-halt when emergency situation is resolved.
+    /// Contribution becomes possible again
     function unHalt() public onlyWallet {
         halted = false;
     }
@@ -251,8 +276,9 @@ contract DelphyICO is Owned {
     /*
      *  Internal functions
      */
+
     /// @dev Buy Delphy token normally
-    /// @param receiver is the receiver of delphy tokens
+    /// @param receiver is the receiving address of delphy tokens
     function doBuyDelphyToken(address receiver) internal {
         // Do not allow contracts to game the system
         require(!isContract(msg.sender));
@@ -266,10 +292,10 @@ contract DelphyICO is Owned {
         doBuy(receiver, toFund, toCollect);
     }
 
-    /// @dev Utility function for buy delphy token
-    /// @param receiver is the receiver of delphy tokens
-    /// @param toFund is the ether amount to charge
-    /// @param tokenCollect the amount of delphy tokens that will receive
+    /// @dev Utility function to buy Delphy tokens
+    /// @param receiver is the receiving address of Delphy tokens
+    /// @param toFund is the ether amount to be paid
+    /// @param tokenCollect the number of delphy tokens purchased
     function doBuy(address receiver, uint toFund, uint tokenCollect) internal {
         require(msg.value >= toFund); // double check
 
@@ -286,10 +312,10 @@ contract DelphyICO is Owned {
         }
     }
 
-    /// @dev Utility function for calculate available tokens and cost ethers
-    /// @param availableToken is the amount of delphy tokens that will be send
+    /// @dev Utility function to calculate available tokens and cost in ethers
+    /// @param availableToken is the number of Delphy tokens that will be purchased
     function calcEtherAndToken(uint availableToken) constant internal returns (uint costValue, uint getTokens){
-        // all conditions has checked in the caller functions
+        // all conditions have been checked in the caller functions
         uint exchangeRate = getTokenTimes();
         getTokens = exchangeRate * msg.value;
 
@@ -302,7 +328,7 @@ contract DelphyICO is Owned {
     }
 
     /// @dev Internal function to determine if an address is a contract
-    /// @param _addr The address being queried
+    /// @param _addr The address to-be-verified
     /// @return True if `_addr` is a contract
     function isContract(address _addr) constant internal returns(bool) {
         uint size;

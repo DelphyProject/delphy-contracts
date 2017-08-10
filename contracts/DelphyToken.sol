@@ -30,23 +30,29 @@
 pragma solidity ^0.4.11;
 import "./StandardToken.sol";
 
-/// @title Delphy token contract
-/// @author jsw
+/// @title Delphy Token contract
+/// For Delphy ICO details: https://delphy.org/index.html#ICO
+/// For Delphy Project: https://delphy.org
+/// @author jsw@delphy.org
 contract DelphyToken is StandardToken {
     /*
      *  Constants
      */
+
     string constant public name = "Delphy Token";
     string constant public symbol = "DPY";
     uint8 constant public decimals = 18;
+
+    /// Delphy token total supply
     uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
 
     /*
      *  Public functions
      */
-    /// @dev Initialize the Delphy Token contract
-    /// @param owners is the pre-allocate owners's addresses
-    /// @param tokens is the pre-allocate owners's delphy token amount
+
+    /// @dev Initialization of the Delphy Token contract
+    /// @param owners is the addresses of Delphy token distribution
+    /// @param tokens is the token number of Delphy token distribution
     function DelphyToken(address[] owners, uint[] tokens)
         public
     {
