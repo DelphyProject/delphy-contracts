@@ -194,20 +194,20 @@ contract('DelphyICO', function (accounts) {
       assert((new BigNumber(web3.eth.getBalance(accounts[6]))).comparedTo(new BigNumber(3).times(ether)) >= 0);
     });
 
-    it ('should failed when ico contract not initialized', async function () {
+    it ('should fail when ico contract is not initialized', async function () {
       await assertFail(async function () {
         await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
       });
     });
 
-    it ('should failed when halted', async function () {
+    it ('should fail when halted', async function () {
       await icoContract.halt({from:wallet});
       await assertFail(async function () {
         await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
       });
     });
 
-    it ('should failed when buy early than startTime', async function () {
+    it ('should fail when buy early than startTime', async function () {
       await icoContract.unHalt({from:wallet});
       await icoContract.setMockedBlockTime(startTime - 1);
       await assertFail(async function () {
@@ -215,7 +215,7 @@ contract('DelphyICO', function (accounts) {
       });
     });
 
-    it ('should failed when value<0.1ether', async function () {
+    it ('should fail when value<0.1ether', async function () {
       await icoContract.unHalt({from:wallet});
       await icoContract.setMockedBlockTime(startTime);
       await assertFail(async function () {
@@ -223,7 +223,7 @@ contract('DelphyICO', function (accounts) {
       });
     });
 
-    it ('should failed when value>20ether', async function () {
+    it ('should fail when value>20ether', async function () {
       const balance = web3.fromWei(web3.eth.getBalance(accounts[0]));
       console.log("value>20ether ? balance=" + balance);
       await icoContract.unHalt({from:wallet});
@@ -233,7 +233,7 @@ contract('DelphyICO', function (accounts) {
       });
     });
 
-    it ('should success when value is between 0.1ether and 20ether', async function () {
+    it ('should succeed when value is between 0.1ether and 20ether', async function () {
       const userIndex = 0;
       const loopCount = 2;
       console.log("value>20.1ether ? balance=" + web3.fromWei(web3.eth.getBalance(accounts[userIndex])));
@@ -261,7 +261,7 @@ contract('DelphyICO', function (accounts) {
       }
     });
 
-    it ('should success when buy between startTime and endTime', async function () {
+    it ('should succeed when buy between startTime and endTime', async function () {
       const userIndex = 1;
       const loopCount = 5;
       for (let i=0; i<loopCount; i++) {
@@ -280,7 +280,7 @@ contract('DelphyICO', function (accounts) {
       }
     });
 
-    it ('should success when buy receiver is 0', async function () {
+    it ('should succeed when receiver address is 0', async function () {
       const userIndex = 1;
       const loopCount = 1;
       for (let i=0; i<loopCount; i++) {
@@ -299,7 +299,7 @@ contract('DelphyICO', function (accounts) {
       }
     });
 
-    it ('should success when call fallback function', async function () {
+    it ('should succeed when calling fallback function', async function () {
       const userIndex = 2;
       const loopCount = 5;
       const addr = await icoContract.address;
@@ -319,7 +319,7 @@ contract('DelphyICO', function (accounts) {
       }
     });
 
-    it ('should success when buy for other user', async function () {
+    it ('should succeed when buy for other users', async function () {
       const userIndex = 3;
       const receiverIndex = 4;
       const loopCount = 5;
@@ -339,14 +339,14 @@ contract('DelphyICO', function (accounts) {
       }
     });
 
-    it ('should failed when buy later than endTime', async function () {
+    it ('should fail when buy later than endTime', async function () {
       await icoContract.setMockedBlockTime(endTime);
       await assertFail(async function () {
         await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
       });
     });
 
-    it ('should success when buy exceed', async function () {
+    it ('should succeed when the last purchase exceeds the left-over', async function () {
       const userIndex = 5;
       const loopCount = 1;
       for (let i=0; i<loopCount; i++) {
@@ -365,7 +365,7 @@ contract('DelphyICO', function (accounts) {
       }
     });
 
-    it ('should failed when already exceed', async function () {
+    it ('should fail when MAX_OPEN_SOLD_AMOUNT is sold out', async function () {
       await icoContract.setMockedBlockTime(startTime);
       await assertFail(async function () {
         await icoContract.buyDelphyToken(accounts[6],{from:accounts[6],value:web3.toWei(1)});
@@ -381,7 +381,7 @@ contract('DelphyICO', function (accounts) {
       });
     });
 
-    it ('should success after endTime', async function () {
+    it ('should succeed after endTime', async function () {
       const lockedCount = new BigNumber(await icoContract.lockedBalances(accounts[1]));
       await icoContract.setMockedBlockTime(endTime + 1);
       await icoContract.claimTokens(accounts[1], {from:accounts[1]});
@@ -389,7 +389,7 @@ contract('DelphyICO', function (accounts) {
       assert(lockedCount.comparedTo(tokenCount) === 0);
     });
 
-    it ('should failed when user locked token == 0', async function () {
+    it ('should fail when user locked token == 0', async function () {
       await icoContract.setMockedBlockTime(endTime + 1);
       await assertFail(async function() {
         await icoContract.claimTokens(accounts[1], {from:accounts[1]});
@@ -398,19 +398,19 @@ contract('DelphyICO', function (accounts) {
   });
 
   describe('CONTRACT finishICO', () => {
-    it ('should faile when caller is not wallet', async function () {
+    it ('should fail when caller is not wallet', async function () {
       await icoContract.setMockedBlockTime(endTime+1);
       await assertFail(async function() {
         await icoContract.finishICO({from:accounts[3]})
       });
     });
-    it ('should failed before endTime', async function () {
+    it ('should fail before endTime', async function () {
       await icoContract.setMockedBlockTime(endTime);
       await assertFail(async function() {
         await icoContract.finishICO({from:wallet})
       });
     });
-    it ('should success call from wallet', async function () {
+    it ('should succeed when call from wallet', async function () {
       await icoContract.setMockedBlockTime(endTime+1);
       await icoContract.finishICO({from:wallet});
       const walletToken = new BigNumber(await tokenContract.balanceOf(wallet));
