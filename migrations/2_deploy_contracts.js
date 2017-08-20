@@ -13,5 +13,5 @@ module.exports = function(deployer,network, accounts) {
   deployer.deploy(Math);
   // deployer.link(Math, [DelphyToken, DelphyICO]);
   deployer.link(Math, [DelphyICO,DelphyICOMock]);
-  deployer.deploy(DelphyICO, accounts[0], timeseconds);
+  deployer.deploy(DelphyICO, accounts[1], timeseconds);
 };

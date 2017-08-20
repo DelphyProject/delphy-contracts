@@ -28,7 +28,8 @@
     "testrpc": "truffle test --network development",
     "migrate": "truffle migrate --reset --network development_migrate",
     "ropsten": "truffle migrate --network ropsten",
-    "rinkeby": "truffle migrate --network rinkeby"
+    "rinkeby": "truffle migrate --network rinkeby",
+    "ours": "truffle migrate --network ours"
   },
   "author": "jsw",
   "license": "ISC"

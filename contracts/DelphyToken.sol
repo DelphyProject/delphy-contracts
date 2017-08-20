@@ -46,6 +46,7 @@ contract DelphyToken is StandardToken {
     /// Delphy token total supply
     uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
 
+
     /*
      *  Public functions
      */

@@ -61,5 +61,13 @@ module.exports = {
       gas: 4000000,
       gasPrice: 20e9,
     },
+    ours: {
+      host: "192.168.0.34",
+      port: 6545,
+      network_id: "*",
+      gas: 4000000,
+      gasPrice: 20e9,
+      from: "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc",
+    },
   }
 };
