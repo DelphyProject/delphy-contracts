@@ -162,21 +162,21 @@ contract('DelphyICO', function (accounts) {
     });
   });
 
-  describe('CONTRACT HALT UNHalt', () => {
-    it ('should halted = true', async function () {
+  describe('CONTRACT HALT & UNHalt', () => {
+    it ('halted should be true when halt() is called', async function () {
       await icoContract.halt({from:wallet});
       assert.equal("1", await icoContract.halted());
     });
-    it ('should halted = false', async function () {
+    it ('halted should be false when unHalt() is called', async function () {
       await icoContract.unHalt({from:wallet});
       assert.equal("0", await icoContract.halted());
     });
-    it ('should only wallet addr can halt', async function () {
+    it ('only wallet address can be halted', async function () {
       await assertFail(async function() {
         await icoContract.halt({from:accounts[1]})
       });
     });
-    it ('should only wallet addr can unhalt', async function () {
+    it ('only wallet address can be unhalt', async function () {
       await assertFail(async function() {
         await icoContract.unHalt({from:accounts[1]})
       });
@@ -194,20 +194,20 @@ contract('DelphyICO', function (accounts) {
       assert((new BigNumber(web3.eth.getBalance(accounts[6]))).comparedTo(new BigNumber(3).times(ether)) >= 0);
     });
 
-    it ('should fail when ico contract is not initialized', async function () {
+    it ('buy should fail when ico contract is not initialized', async function () {
       await assertFail(async function () {
         await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
       });
     });
 
-    it ('should fail when halted', async function () {
+    it ('buy should fail when halted', async function () {
       await icoContract.halt({from:wallet});
       await assertFail(async function () {
         await icoContract.buyDelphyToken(accounts[1],{from:accounts[1],value:web3.toWei(1)});
       });
     });
 
-    it ('should fail when buy early than startTime', async function () {
+    it ('should fail when buy earlier than startTime', async function () {
       await icoContract.unHalt({from:wallet});
       await icoContract.setMockedBlockTime(startTime - 1);
       await assertFail(async function () {
@@ -215,7 +215,7 @@ contract('DelphyICO', function (accounts) {
       });
     });
 
-    it ('should fail when value<0.1ether', async function () {
+    it ('should fail when value < 0.1 ether', async function () {
       await icoContract.unHalt({from:wallet});
       await icoContract.setMockedBlockTime(startTime);
       await assertFail(async function () {
@@ -223,7 +223,7 @@ contract('DelphyICO', function (accounts) {
       });
     });
 
-    it ('should fail when value>20ether', async function () {
+    it ('should fail when value > 20 ether', async function () {
       const balance = web3.fromWei(web3.eth.getBalance(accounts[0]));
       console.log("value>20ether ? balance=" + balance);
       await icoContract.unHalt({from:wallet});
