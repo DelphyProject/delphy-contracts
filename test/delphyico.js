@@ -88,42 +88,28 @@ contract('DelphyICO', function (accounts) {
   let endTime;
   const numTestCases = 3;
   describe('PREPARATIONS', () => {
-    before('Check accounts', (done) => {
+    before('Check accounts', async () => {
       assert.equal(accounts.length, 10);
-      done();
     });
 
-    it('Set startTime as now', (done) => {
-      web3.eth.getBlock('latest', (err, result) => {
-        initalBlockTime = result.timestamp;
-        startTime = initalBlockTime + startDelay;
-        endTime = startTime + totalDuring;
-        done();
-      });
-    });
-
-    it('Set up test cases', (done) => {
-      testCases = [];
-      for (i = 0; i < numTestCases; i += 1) {
-        const timeSpacing = (endTime - startTime) / numTestCases;
-        const blockTime = Math.round(startTime + (i * timeSpacing));
-        let expectedPrice = 250;
-
-        const accountNum = Math.max(1, Math.min(i + 1, accounts.length - 1));
-        const account = accounts[accountNum];
-        expectedPrice = Math.round(expectedPrice);
-        testCases.push({
-          accountNum,
-          blockTime,
-          timeSpacing,
-          amountToBuy: web3.toWei(2.1, 'ether'),
-          expectedPrice,
-          account,
-        });
-      }
-      done();
+    it('Set startTime as now', async () => {
+      const latestBlock = await web3.eth.getBlock('latest');
+      initalBlockTime = latestBlock.timestamp;
+      startTime = initalBlockTime + startDelay;
+      endTime = startTime + totalDuring;
     });
   });
+
+  //deploy contract and reset related context
+  async function resetContractTestEnv() {
+    //deploy contract
+    const latestBlock = await web3.eth.getBlock('latest');
+    startTime = latestBlock.timestamp;
+    icoContract = await DelphyICOMock.new(wallet, startTime);
+    tokenContract = DelphyTokenContract.at(await icoContract.delphyToken());
+
+    endTime = startTime + totalDuring;
+  }
 
   describe('CONTRIBUTION CONTRACT STATIC CHECK', () => {
     it('Total Stake equal 100', (done) => {
@@ -225,7 +211,6 @@ contract('DelphyICO', function (accounts) {
 
     it ('should fail when value > 20 ether', async function () {
       const balance = web3.fromWei(web3.eth.getBalance(accounts[0]));
-      console.log("value>20ether ? balance=" + balance);
       await icoContract.unHalt({from:wallet});
       await icoContract.setMockedBlockTime(startTime);
       await assertFail(async function () {
@@ -236,9 +221,7 @@ contract('DelphyICO', function (accounts) {
     it ('should succeed when value is between 0.1ether and 20ether', async function () {
       const userIndex = 0;
       const loopCount = 2;
-      console.log("value>20.1ether ? balance=" + web3.fromWei(web3.eth.getBalance(accounts[userIndex])));
       for (let i=0; i<loopCount; i++) {
-        console.log("wallet:" + new BigNumber(web3.eth.getBalance(wallet)));
         let lockedToken = new BigNumber(await icoContract.lockedBalances(accounts[userIndex]));
         let openSoldToken = new BigNumber(await icoContract.openSoldTokens());
         let tokenTimes = new BigNumber(250);
@@ -251,10 +234,6 @@ contract('DelphyICO', function (accounts) {
         await icoContract.buyDelphyToken(accounts[userIndex],{from:accounts[userIndex],value:web3.toWei(ethMount)});
         const tokenMount = (new BigNumber(ethMount)).times(ether).times(tokenTimes);
         const gasMount = (new BigNumber(ethMount)).times(ether);
-        console.log("accout0=" + web3.fromWei(web3.eth.getBalance(accounts[userIndex])));
-        console.log(tokenMount);
-        console.log(gasMount);
-        console.log("wallet:" + new BigNumber(web3.eth.getBalance(wallet)));
         assert((lockedToken.add(tokenMount)).comparedTo(new BigNumber(await icoContract.lockedBalances(accounts[userIndex]))) === 0);
         assert((openSoldToken.add(tokenMount)).comparedTo(new BigNumber(await icoContract.openSoldTokens())) === 0);
         assert(balance.add(gasMount).comparedTo(new BigNumber(web3.eth.getBalance(wallet))) === 0);
@@ -386,6 +365,14 @@ contract('DelphyICO', function (accounts) {
       await icoContract.setMockedBlockTime(endTime + 1);
       await icoContract.claimTokens(accounts[1], {from:accounts[1]});
       const tokenCount = new BigNumber(await tokenContract.balanceOf(accounts[1]));
+      assert(lockedCount.comparedTo(tokenCount) === 0);
+    });
+
+    it ('should succeed if receiver == 0x0 and the receiver should be msg.sender', async function () {
+      const lockedCount = new BigNumber(await icoContract.lockedBalances(accounts[0]));
+      await icoContract.setMockedBlockTime(endTime + 1);
+      await icoContract.claimTokens('0x0', {from:accounts[0]});
+      const tokenCount = new BigNumber(await tokenContract.balanceOf(accounts[0]));
       assert(lockedCount.comparedTo(tokenCount) === 0);
     });
 
