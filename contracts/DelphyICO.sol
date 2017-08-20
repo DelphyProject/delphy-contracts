@@ -220,6 +220,7 @@ contract DelphyICO is Owned {
         returns (bool)
     {
         require(msg.value >= 0.1 ether);
+        require(msg.value <= 20 ether);
 
         if (receiver == 0x0)
             receiver = msg.sender;

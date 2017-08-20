@@ -17,6 +17,7 @@ contract DelphyICOMock is DelphyICO {
     /// @param _startTime Array of addresses receiving preassigned tokens.
     function DelphyICOMock(address _wallet, uint _startTime) DelphyICO(_wallet,_startTime) {
         mock_blockTime = now;
+        mock_tokenTimes = 250;
     }
 
     /*
