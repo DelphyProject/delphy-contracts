@@ -70,7 +70,10 @@ contract DelphyICO is Owned {
 
     /// second round ICO: 8%
     /// address public constant PUBLIC_SECOND_HOLDER = 0x4a75c0bD3e9B71A99fC9A5CAA92fcdb9Bc62a374;
-    uint public constant PUBLIC_SECOND_TOKENS = TOTAL_TOKENS_PERCENT * 8;
+    uint public constant PUBLIC_SECOND_TOKENS = TOTAL_TOKENS_PERCENT / 10 * 25;
+
+    address public constant PUBLIC_SECOND_PRESOLD_HOLDER = 0x4a75c0bD3e9B71A99fC9A5CAA92fcdb9Bc62a374;
+    uint public constant PUBLIC_SECOND_PRESOLD_TOKENS = TOTAL_TOKENS_PERCENT / 10 * 55;
 
     /// pre-ico 5%
     address public constant PRE_ICO_HOLDER = 0x32d192A05030F3Cf34DDb017b1306fB0E1378E1E;
@@ -179,8 +182,8 @@ contract DelphyICO is Owned {
         endTime = startTime + ICO_DURATION;
         openSoldTokens = 0;
 
-        address[] memory orgs = new address[](6);
-        uint[] memory nums = new uint[](6);
+        address[] memory orgs = new address[](7);
+        uint[] memory nums = new uint[](7);
         orgs[0] = BONUS_HOLDER;
         nums[0] = BONUS_TOKENS;
 
@@ -190,14 +193,17 @@ contract DelphyICO is Owned {
         orgs[2] = this;
         nums[2] = PUBLIC_SECOND_TOKENS;
 
-        orgs[3] = PRE_ICO_HOLDER;
-        nums[3] = PRE_ICO_TOKENS;
+        orgs[3] = PUBLIC_SECOND_PRESOLD_HOLDER;
+        nums[3] = PUBLIC_SECOND_PRESOLD_TOKENS;
 
-        orgs[4] = DEV_TEAM_HOLDER;
-        nums[4] = DEV_TEAM_TOKENS;
+        orgs[4] = PRE_ICO_HOLDER;
+        nums[4] = PRE_ICO_TOKENS;
 
-        orgs[5] = FOUNDATION_HOLDER;
-        nums[5] = FOUNDATION_TOKENS;
+        orgs[5] = DEV_TEAM_HOLDER;
+        nums[5] = DEV_TEAM_TOKENS;
+
+        orgs[6] = FOUNDATION_HOLDER;
+        nums[6] = FOUNDATION_TOKENS;
         delphyToken = new DelphyToken(orgs, nums);
     }
 

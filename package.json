@@ -29,6 +29,7 @@
     "migrate": "truffle migrate --reset --network development_migrate",
     "ropsten": "truffle migrate --network ropsten",
     "rinkeby": "truffle migrate --network rinkeby",
+    "kovan": "truffle migrate --network kovan",
     "ours": "truffle migrate --network ours"
   },
   "author": "jsw",
