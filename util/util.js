@@ -22,7 +22,7 @@ var getTimeInSeconds = function (time) {
     console.log("time=" + timeseconds);
 };
 
-var timenow = new Date('2017/08/22 15:00:00').getTime();
+var timenow = new Date('2017/08/31 15:00:00').getTime();
 console.log(timenow);
 getTimeInSeconds(new Date().getTime());
 
