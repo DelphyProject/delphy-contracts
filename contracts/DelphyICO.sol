@@ -61,30 +61,30 @@ contract DelphyICO is Owned {
     uint public constant ICO_DURATION = 5 days;
 
     /// bonus coin distribution 50%
-    address public BONUS_HOLDER = 0xad854341e7989F5542189bB52265337E2993B7bc;
+    address public BONUS_HOLDER = 0xFE2b768a23948EDDD7D7Caea55bAa31E39045382;
     uint public constant BONUS_TOKENS = TOTAL_TOKENS_PERCENT * 50;
 
     /// first round ICO: 18%
-    address public constant PUBLIC_FIRST_HOLDER = 0x431Cf2c7310d15Ec9316510dAF6BbC48557ecB2C;
+    address public constant PUBLIC_FIRST_HOLDER = 0xA9a418dA22532Bd1189fF8Be5Cdaf3570bF9da43;
     uint public constant PUBLIC_FIRST_TOKENS = TOTAL_TOKENS_PERCENT * 18;
 
     /// second round ICO: 8%
-    /// address public constant PUBLIC_SECOND_HOLDER = 0x4a75c0bD3e9B71A99fC9A5CAA92fcdb9Bc62a374;
+    /// address public constant PUBLIC_SECOND_HOLDER = 0x9F3A4BBeD4660F2DCCd6E980e2FaA6d6214E5Dc8;
     uint public constant PUBLIC_SECOND_TOKENS = TOTAL_TOKENS_PERCENT / 10 * 25;
 
-    address public constant PUBLIC_SECOND_PRESOLD_HOLDER = 0x4a75c0bD3e9B71A99fC9A5CAA92fcdb9Bc62a374;
+    address public constant PUBLIC_SECOND_PRESOLD_HOLDER = 0xc10261166b4699D3c1535Aa30AC29446c755f065;
     uint public constant PUBLIC_SECOND_PRESOLD_TOKENS = TOTAL_TOKENS_PERCENT / 10 * 55;
 
     /// pre-ico 5%
-    address public constant PRE_ICO_HOLDER = 0x32d192A05030F3Cf34DDb017b1306fB0E1378E1E;
+    address public constant PRE_ICO_HOLDER = 0xe480219e1904de4500Cd8459C74d388457A3f3Ec;
     uint public constant PRE_ICO_TOKENS = TOTAL_TOKENS_PERCENT * 5;
 
     /// dev team 10%
-    address public constant DEV_TEAM_HOLDER = 0x24b7c7800a3636844898832463FB6934337D8518;
+    address public constant DEV_TEAM_HOLDER = 0xED7211F84b37B0f62d345462fFeB56b57B787539;
     uint public constant DEV_TEAM_TOKENS = TOTAL_TOKENS_PERCENT * 10;
 
     /// Delphy Foundation 9%
-    address public constant FOUNDATION_HOLDER = 0xD6355e36b4715D7Ef80432ED0F7063FEbe0806A5;
+    address public constant FOUNDATION_HOLDER = 0x127e631E39eaeb0A214dfc5806BBDf26bA5ee214;
     uint public constant FOUNDATION_TOKENS = TOTAL_TOKENS_PERCENT * 9;
 
     /// maximum tokens to-be-sold
@@ -113,9 +113,6 @@ contract DelphyICO is Owned {
 
     /// In emergency, set this to true to halt the contribution
     bool public halted;
-
-    /// tokens bought by address
-    mapping (address => uint256) public lockedBalances;
 
     /*
      *  Modifiers
@@ -251,23 +248,6 @@ contract DelphyICO is Owned {
         return true;
     }
 
-    /// @dev After locking period passes, unlock tokens.
-    ///      All tokens owned by receiver will be tradeable
-    function claimTokens(address receiver)
-        public
-        isLaterThan(endTime)
-        isValidPayload
-    {
-        if (receiver == 0x0)
-            receiver = msg.sender;
-
-        uint tokenCount = lockedBalances[receiver] ;
-        require(tokenCount != 0x0);
-
-        require(delphyToken.transfer(receiver, tokenCount));
-        lockedBalances[receiver] = 0;
-    }
-
     /// @dev Stop contribution when in emergency.
     /// Contribution is not possible anymore.
     function halt() public onlyWallet {
@@ -307,8 +287,8 @@ contract DelphyICO is Owned {
         require(msg.value >= toFund); // double check
 
         if(toFund > 0) {
-            lockedBalances[receiver] += tokenCollect;
             wallet.transfer(toFund);
+            require(delphyToken.transfer(receiver, tokenCollect));
             openSoldTokens = openSoldTokens.add(tokenCollect);
             NewSale(receiver, toFund, tokenCollect);
         }
