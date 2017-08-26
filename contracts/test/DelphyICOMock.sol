@@ -31,6 +31,10 @@ contract DelphyICOMock is DelphyICO {
         mock_blockTime = _b;
     }
 
+    function getMockTokenTimes() public constant returns (uint256) {
+        return mock_tokenTimes;
+    }
+
     function getTokenTimes() internal constant returns (uint256) {
         return mock_tokenTimes;
     }

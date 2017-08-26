@@ -31,6 +31,7 @@
     "rinkeby": "truffle migrate --network rinkeby",
     "kovan": "truffle migrate --network kovan",
     "ours": "truffle migrate --network ours"
+    "mainnet": "truffle migrate --network mainnet"
   },
   "author": "jsw",
   "license": "ISC"

@@ -53,7 +53,7 @@ contract DelphyICO is Owned {
 
     /// - Delphy token distribution
     ///
-    /// -        bonus (post-sail in 24 months)         -       public sail       -pre-ico- dev team   -foundation-
+    /// -        bonus (post-sale in 24 months)         -       public sale       -pre-ico- dev team   -foundation-
     /// -                       50%                     -        (18 + 8)%        -   5%  -    10%     -    9%    -
     ///
     uint public constant TOTAL_TOKENS = 100000000 * 10**18; // 1e
@@ -155,11 +155,6 @@ contract DelphyICO is Owned {
 
     modifier isNotContract(address _addr) {
         require(!isContract(_addr));
-        _;
-    }
-
-    modifier isValidPayload() {
-        require (msg.data.length == 4 || msg.data.length == 36);
         _;
     }
 

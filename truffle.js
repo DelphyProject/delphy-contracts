@@ -35,11 +35,11 @@ module.exports = {
         },
         mainnet: {
             network_id: 1,
-            host: "https://mainnet.infura.io/metamask",
-            port: 80,
+            host: "118.190.71.27",
+            port: 8745,
             gas: 4000000,
             gasPrice: 20e9,
-            from: "0xf93df8c288b9020e76583a6997362e89e0599e99",
+            from: "0x9d24211d51cf056620bf46a8f1c35f1c857260c1",
         },
         ropsten: {
             host: "114.215.69.125",
