@@ -61,30 +61,30 @@ contract DelphyICO is Owned {
     uint public constant ICO_DURATION = 5 days;
 
     /// bonus coin distribution 50%
-    address public BONUS_HOLDER = 0xFE2b768a23948EDDD7D7Caea55bAa31E39045382;
+    address public BONUS_HOLDER = 0x5421da24adE5e108F48b1b39f6Aa82a47aE49318;
     uint public constant BONUS_TOKENS = TOTAL_TOKENS_PERCENT * 50;
 
     /// first round ICO: 18%
-    address public constant PUBLIC_FIRST_HOLDER = 0xA9a418dA22532Bd1189fF8Be5Cdaf3570bF9da43;
+    address public constant PUBLIC_FIRST_HOLDER = 0xD01024AFa5cA097f5BEA8A6ceeE8902014C45628;
     uint public constant PUBLIC_FIRST_TOKENS = TOTAL_TOKENS_PERCENT * 18;
 
     /// second round ICO: 8%
     /// address public constant PUBLIC_SECOND_HOLDER = 0x9F3A4BBeD4660F2DCCd6E980e2FaA6d6214E5Dc8;
     uint public constant PUBLIC_SECOND_TOKENS = TOTAL_TOKENS_PERCENT / 10 * 25;
 
-    address public constant PUBLIC_SECOND_PRESOLD_HOLDER = 0xc10261166b4699D3c1535Aa30AC29446c755f065;
+    address public constant PUBLIC_SECOND_PRESOLD_HOLDER = 0xF27a5B6501C5d15D56BDBeeC5394008fe0a71382;
     uint public constant PUBLIC_SECOND_PRESOLD_TOKENS = TOTAL_TOKENS_PERCENT / 10 * 55;
 
     /// pre-ico 5%
-    address public constant PRE_ICO_HOLDER = 0xe480219e1904de4500Cd8459C74d388457A3f3Ec;
+    address public constant PRE_ICO_HOLDER = 0x2593afA39CeB0d0E0a6024D5Dc9365814b4fD379;
     uint public constant PRE_ICO_TOKENS = TOTAL_TOKENS_PERCENT * 5;
 
     /// dev team 10%
-    address public constant DEV_TEAM_HOLDER = 0xED7211F84b37B0f62d345462fFeB56b57B787539;
+    address public constant DEV_TEAM_HOLDER = 0xB617e4070F8c22ED0E283268E038ea6E22ea685C;
     uint public constant DEV_TEAM_TOKENS = TOTAL_TOKENS_PERCENT * 10;
 
     /// Delphy Foundation 9%
-    address public constant FOUNDATION_HOLDER = 0x127e631E39eaeb0A214dfc5806BBDf26bA5ee214;
+    address public constant FOUNDATION_HOLDER = 0xF55aB9b3895bBA429f8c41DDa7415b21EcA02c22;
     uint public constant FOUNDATION_TOKENS = TOTAL_TOKENS_PERCENT * 9;
 
     /// maximum tokens to-be-sold
