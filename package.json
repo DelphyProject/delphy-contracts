@@ -17,7 +17,9 @@
     "babel-preset-stage-3": "^6.24.1",
     "bignumber.js": "^4.0.2",
     "ethereumjs-util": "^5.1.2",
-    "truffle-hdwallet-provider": "0.0.3"
+    "truffle-hdwallet-provider": "0.0.3",
+    "comma-separated-values": "^3.6.4",
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
     "async": "^2.5.0",
@@ -30,7 +32,7 @@
     "ropsten": "truffle migrate --network ropsten",
     "rinkeby": "truffle migrate --network rinkeby",
     "kovan": "truffle migrate --network kovan",
-    "ours": "truffle migrate --network ours"
+    "ours": "truffle migrate --network ours",
     "mainnet": "truffle migrate --network mainnet"
   },
   "author": "jsw",
